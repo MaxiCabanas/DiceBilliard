@@ -1,6 +1,11 @@
 class_name DiceController
 extends RigidBody3D
 
+const dice_types = preload("res://Scripts/dice_types.gd")
+
+@export var Type = dice_types.DiceType.D20
+
+@export_category("Dice Physics")
 @export var LaunchCurve: Curve
 @export var MaxLaunchDistance: float = 10
 @export var LaunchMultiplier: float = 1
@@ -11,6 +16,8 @@ var is_being_grabbed: bool = false
 
 @onready var viewport: Viewport = get_viewport()
 @onready var camera: Camera3D = viewport.get_camera_3d()
+
+signal dice_rolled
 
 func _physics_process(delta):
 	if is_being_grabbed:
