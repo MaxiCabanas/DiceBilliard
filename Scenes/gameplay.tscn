@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://cngf0gybrb7d3"]
+
+[ext_resource type="Material" uid="uid://ma53umhrx2kr" path="res://Material/standard_surface.tres" id="1_nqoa5"]
+[ext_resource type="PackedScene" uid="uid://cnvykmmtmk6nt" path="res://Scenes/d_20_scene.tscn" id="2_ceks8"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_eoc35"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_w75gd"]
+sky_material = SubResource("ProceduralSkyMaterial_eoc35")
+
+[sub_resource type="Environment" id="Environment_8qurc"]
+background_mode = 2
+sky = SubResource("Sky_w75gd")
+ambient_light_color = Color(0.572549, 0.964706, 0.960784, 1)
+tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_bnwmn"]
+size = Vector3(100, 0.5, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uu5ev"]
+size = Vector3(100, 0.5, 100)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 10.3329, -2.90967)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8qurc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_bnwmn")
+surface_material_override/0 = ExtResource("1_nqoa5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("BoxShape3D_uu5ev")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.830027, -0.420263, 0.366651, 0, 0.657408, 0.753535, -0.557723, -0.625455, 0.545666, 2.59895, 6.85979, 4.37334)
+fov = 90.0
+
+[node name="D20-rigid" parent="." instance=ExtResource("2_ceks8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.132, 0)
+
+[node name="D20-rigid2" parent="." instance=ExtResource("2_ceks8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.31469, 0)
+
+[node name="D20-rigid3" parent="." instance=ExtResource("2_ceks8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.30477, 0)
+
+[node name="D20-rigid4" parent="." instance=ExtResource("2_ceks8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.33208, 0)
