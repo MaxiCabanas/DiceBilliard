@@ -1,37 +1,45 @@
 class_name DiceController
 extends RigidBody3D
 
+@export var LaunchCurve: Curve
+@export var MaxLaunchDistance: float = 10
+@export var LaunchMultiplier: float = 1
+
 var impulse: Vector3
-var mousePos: Vector3
-var clickNormal: Vector3
+var is_being_overlapped: bool = false
+var is_being_grabbed: bool = false
 
-func _ready():
-	pass
+@onready var viewport: Viewport = get_viewport()
+@onready var camera: Camera3D = viewport.get_camera_3d()
 
+func _physics_process(delta):
+	if is_being_grabbed:
+		var mousePos = viewport.get_mouse_position()
+		var distance = (camera.position - position).length()
+		
+		var drag_position = camera.project_position(mousePos, distance)
+		
+		#Make the result of raycast be at the same height of the dice.
+		drag_position.y = position.y
+		
+		impulse = position - drag_position
+		
+		var remapedForce = remap(impulse.length(), 0.0, MaxLaunchDistance, 0.0, 1.0)
+		var finalLaunchForce = LaunchCurve.sample_baked(remapedForce) * LaunchMultiplier
+		
+		impulse = impulse.normalized() * finalLaunchForce
 
 func _process(delta):
-	if Input.is_action_pressed("grab"):
-		$DebugText.text = _debug_vector(mousePos)
-		
-	if Input.is_action_just_pressed("hit"):
-		
-		var rng = RandomNumberGenerator.new()
-		var x = rng.randf_range(-1.0, 1.0)
-		var y = rng.randf_range(-1.0, 1.0)
-		var z = rng.randf_range(-1.0, 1.0)
-		
-		var power = rng.randf_range(1.0, 10.0)
-		
-		self.apply_impulse(Vector3(x,y,z).normalized() * power)
+	if is_being_overlapped && Input.is_action_pressed("grab"):
+		is_being_grabbed = true
+			
+	if Input.is_action_just_released("grab"):
+		if is_being_grabbed:
+			is_being_grabbed = false
+			apply_impulse(impulse)
 
+func _on_detection_area_mouse_entered():
+	is_being_overlapped = true
 
-func _on_detection_area_input_event(camera, event, position, normal, shape_idx):
-	mousePos = position
-	clickNormal = normal
-
-func _debug_vector(vector):
-	var finalString = "("
-	finalString += String.num(vector.x, 2) + " , "
-	finalString += String.num(vector.y, 2) + " , "
-	finalString += String.num(vector.z, 2) + ")"
-	return finalString
+func _on_detection_area_mouse_exited():
+	is_being_overlapped = false
