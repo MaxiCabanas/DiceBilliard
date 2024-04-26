@@ -1,4 +1,6 @@
 class_name TestName
+extends Node3D
+
 enum DiceType {
 	D6,
 	D20
