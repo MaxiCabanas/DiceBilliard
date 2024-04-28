@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cngf0gybrb7d3"]
+[gd_scene load_steps=9 format=3 uid="uid://cngf0gybrb7d3"]
 
 [ext_resource type="Material" uid="uid://ma53umhrx2kr" path="res://Material/standard_surface.tres" id="1_nqoa5"]
 [ext_resource type="PackedScene" uid="uid://cnvykmmtmk6nt" path="res://Scenes/d_20_scene.tscn" id="2_ceks8"]
+[ext_resource type="PackedScene" uid="uid://cdihauiyxnrkr" path="res://Scenes/tronera_scene.tscn" id="3_ccb6d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_eoc35"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -17,10 +18,10 @@ ambient_light_color = Color(0.572549, 0.964706, 0.960784, 1)
 tonemap_mode = 2
 
 [sub_resource type="BoxMesh" id="BoxMesh_bnwmn"]
-size = Vector3(100, 0.5, 100)
+size = Vector3(10, 0.5, 10)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uu5ev"]
-size = Vector3(100, 0.5, 100)
+size = Vector3(10, 0.5, 10)
 
 [node name="Node3D" type="Node3D"]
 
@@ -32,6 +33,7 @@ shadow_enabled = true
 environment = SubResource("Environment_8qurc")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
 mesh = SubResource("BoxMesh_bnwmn")
 surface_material_override/0 = ExtResource("1_nqoa5")
 
@@ -40,9 +42,43 @@ surface_material_override/0 = ExtResource("1_nqoa5")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
 shape = SubResource("BoxShape3D_uu5ev")
 
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+mesh = SubResource("BoxMesh_bnwmn")
+surface_material_override/0 = ExtResource("1_nqoa5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D"]
+shape = SubResource("BoxShape3D_uu5ev")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.5, 6, 0, 0)
+mesh = SubResource("BoxMesh_bnwmn")
+surface_material_override/0 = ExtResource("1_nqoa5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D"]
+shape = SubResource("BoxShape3D_uu5ev")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.5, -6, 0, 0)
+mesh = SubResource("BoxMesh_bnwmn")
+surface_material_override/0 = ExtResource("1_nqoa5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D4/StaticBody3D"]
+shape = SubResource("BoxShape3D_uu5ev")
+
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.59274, -0.616041, 0.5188, 0, 0.644157, 0.764894, -0.805394, -0.453383, 0.381817, 5.58433, 7.63518, 3.12203)
+current = true
 fov = 90.0
 
 [node name="Dice" parent="." instance=ExtResource("2_ceks8")]
-transform = Transform3D(0.882564, -0.44097, 0.163176, 0.469846, 0.813798, -0.34202, 0.0180283, 0.378522, 0.925417, 0, 0.969609, 0)
+transform = Transform3D(0.882564, -0.44097, 0.163176, 0.469846, 0.813798, -0.34202, 0.0180283, 0.378522, 0.925417, 2.19545, 2.94706, -2.74789)
+
+[node name="tronera" parent="." instance=ExtResource("3_ccb6d")]
+transform = Transform3D(0.185667, 0, 0.982613, 0, 1, 0, -0.982613, 0, 0.185667, 0, 0, 0)

@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://cdihauiyxnrkr"]
+
+[ext_resource type="PackedScene" uid="uid://b3xyqvxa7ma32" path="res://Objects/tronera.glb" id="1_t4ro0"]
+[ext_resource type="Material" uid="uid://ma53umhrx2kr" path="res://Material/standard_surface.tres" id="2_0pe5q"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2nrqa"]
+size = Vector3(3, 1, 0.75)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mawm6"]
+size = Vector3(3, 1, 0.75)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vmxlv"]
+size = Vector3(0.75, 1, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1v7io"]
+size = Vector3(0.75, 1, 3)
+
+[node name="tronera" instance=ExtResource("1_t4ro0")]
+
+[node name="tronera" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_0pe5q")
+
+[node name="wall" type="MeshInstance3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1.5, 0, 0, 0, 1, 0, 0.520586, -1.125)
+mesh = SubResource("BoxMesh_2nrqa")
+surface_material_override/0 = ExtResource("2_0pe5q")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="wall" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall/StaticBody3D" index="0"]
+shape = SubResource("BoxShape3D_mawm6")
+
+[node name="wall2" type="MeshInstance3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1.5, 0, 0, 0, 1, -1.12455, 0.520586, 0)
+mesh = SubResource("BoxMesh_vmxlv")
+surface_material_override/0 = ExtResource("2_0pe5q")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="wall2" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall2/StaticBody3D" index="0"]
+shape = SubResource("BoxShape3D_1v7io")
