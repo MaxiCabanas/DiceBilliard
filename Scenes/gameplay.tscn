@@ -41,8 +41,8 @@ surface_material_override/0 = ExtResource("1_nqoa5")
 shape = SubResource("BoxShape3D_uu5ev")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.59274, -0.616041, 0.5188, 0, 0.644157, 0.764893, -0.805394, -0.453383, 0.381817, 2.37788, 2.90775, 0.762207)
+transform = Transform3D(0.59274, -0.616041, 0.5188, 0, 0.644157, 0.764894, -0.805394, -0.453383, 0.381817, 5.58433, 7.63518, 3.12203)
 fov = 90.0
 
-[node name="D20-rigid" parent="." instance=ExtResource("2_ceks8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15731, 1.132, 0)
+[node name="Dice" parent="." instance=ExtResource("2_ceks8")]
+transform = Transform3D(0.882564, -0.44097, 0.163176, 0.469846, 0.813798, -0.34202, 0.0180283, 0.378522, 0.925417, 0, 0.969609, 0)

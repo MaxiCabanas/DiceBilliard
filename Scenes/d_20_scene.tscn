@@ -45,10 +45,11 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_umumw")
 
 [node name="Dice" type="RigidBody3D"]
+transform = Transform3D(0.882564, -0.44097, 0.163176, 0.469846, 0.813798, -0.34202, 0.0180283, 0.378522, 0.925417, 0, 0, 0)
 script = ExtResource("2_3o3af")
 LaunchCurve = ExtResource("2_2yne7")
 MaxLaunchDistance = 5.0
-LaunchMultiplier = 50.0
+LaunchMultiplier = 10.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("ConvexPolygonShape3D_5a3pr")

@@ -1,13 +1,6 @@
 class_name DiceController
 extends RigidBody3D
 
-enum {
-	STILL,
-	ROLLING,
-	GRABBED,
-	RELEASED
-}
-
 const dice_types = preload("res://Scripts/dice_types.gd")
 
 @export var Type = dice_types.DiceType.D20
@@ -17,14 +10,9 @@ const dice_types = preload("res://Scripts/dice_types.gd")
 @export var MaxLaunchDistance: float = 10
 @export var LaunchMultiplier: float = 1
 
-var impulse: Vector3
 var is_being_overlapped: bool = false
-var must_emit: bool = false
-#var is_being_grabbed: bool = false
-#var is_rolling: bool = false
-#var is_rolling_from_player_interaction: bool = false
-
-var current_state = STILL
+var is_being_grabbed: bool = false
+var last_sleeping_state: bool = false
 
 @onready var viewport: Viewport = get_viewport()
 @onready var camera: Camera3D = viewport.get_camera_3d()
@@ -32,40 +20,39 @@ var current_state = STILL
 signal dice_rolled
 
 func _physics_process(delta):
-	if _is_dice_state(GRABBED):
-		var mousePos = viewport.get_mouse_position()
-		var distance = (camera.position - position).length()
-		
-		var drag_position = camera.project_position(mousePos, distance)
-		
-		#Make the result of raycast be at the same height of the dice.
-		drag_position.y = position.y
-		
-		impulse = position - drag_position
-		
-		var remapedForce = remap(impulse.length(), 0.0, MaxLaunchDistance, 0.0, 1.0)
-		var finalLaunchForce = LaunchCurve.sample_baked(remapedForce) * LaunchMultiplier
-		
-		impulse = impulse.normalized() * finalLaunchForce
-	
-	elif _is_dice_still() && _is_dice_state(ROLLING):
-		_set_state(STILL)
-		if must_emit:
-			must_emit = false
+	if sleeping != last_sleeping_state:
+		last_sleeping_state = sleeping
+		if sleeping:
 			dice_rolled.emit()
-	elif !_is_dice_still() && _is_dice_state(RELEASED):
-		_set_state(ROLLING)
-		must_emit = true
 
-func _process(delta):
-	if _is_dice_state(STILL) && is_being_overlapped && Input.is_action_pressed("grab"):
-		#is_being_grabbed = true
-		_set_state(GRABBED)
-		
-	if _is_dice_state(GRABBED) && Input.is_action_just_released("grab"):
-		_set_state(RELEASED)
-		apply_impulse(impulse)
+func _unhandled_input(event):
+	if event.is_action_type():
+		if event.is_action_pressed("grab") && is_being_overlapped:
+			is_being_grabbed = true
+		elif event.is_action_released("grab") && is_being_grabbed:
+			is_being_grabbed = false
+			apply_impulse(_calculate_impulse())
 			
+# Need rework because with perspective is broken
+func _calculate_impulse():
+	var mousePos = viewport.get_mouse_position()
+	var distance = (camera.position - position).length()
+	
+	var drag_position = camera.project_position(mousePos, distance)
+	
+	#Make the result of raycast be at the same height of the dice.
+	drag_position.y = position.y
+	
+	var temp_force = position - drag_position
+	
+	var remapedForce = remap(temp_force.length(), 0.0, MaxLaunchDistance, 0.0, 1.0)
+	var finalLaunchForce = LaunchCurve.sample_baked(remapedForce) * LaunchMultiplier
+	
+	temp_force = temp_force.normalized() * finalLaunchForce
+	return temp_force
+
+# Can be used insted of the in-build sleeping variable if want to remove delay
+# or doesn't want to relly on sleeping system.
 func _is_dice_still():
 	#return linear_velocity.length_squared() < 0.0001
 	const tolerance: float = 0.00001
@@ -74,13 +61,6 @@ func _is_dice_still():
 	is_still = is_still || abs(linear_velocity.y) < tolerance
 	is_still = is_still || abs(linear_velocity.z) < tolerance
 	return is_still
-
-func _set_state(new_state):
-	if current_state != new_state:
-		current_state = new_state
-
-func _is_dice_state(state):
-	return current_state == state
 
 func _on_detection_area_mouse_entered():
 	is_being_overlapped = true
